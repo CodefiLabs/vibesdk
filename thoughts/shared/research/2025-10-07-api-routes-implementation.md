@@ -1181,7 +1181,7 @@ cors({
 
 ## Next Steps
 
-1. **Enable API Key Routes**: Uncomment lines 35-38 in `worker/api/routes/authRoutes.ts`. Check that we really want to do this, These routes might be for creating LLM API keys rather an keys for our own API
+1. **Enable API Key Routes**: Uncomment lines 35-38 in `worker/api/routes/authRoutes.ts`. Check that we really want to do this, These routes might be for creating LLM API keys rather than keys for our own API
 2. **Add API_KEY Secret**: Configure in Cloudflare Workers dashboard. I already created this in the dashboard
 3. **Implement Project Routes**: Create files following patterns above
 4. **Add Tests**: Create comprehensive test suite for new endpoints

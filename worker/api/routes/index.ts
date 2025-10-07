@@ -13,6 +13,7 @@ import { setupSentryRoutes } from './sentryRoutes';
 import { Hono } from "hono";
 import { AppEnv } from "../../types/appenv";
 import { setupStatusRoutes } from './statusRoutes';
+import { setupProjectRoutes } from './projectRoutes';
 
 export function setupRoutes(app: Hono<AppEnv>): void {
     // Health check route
@@ -58,4 +59,7 @@ export function setupRoutes(app: Hono<AppEnv>): void {
 
     // Screenshot serving routes (public)
     setupScreenshotRoutes(app);
+
+    // Project management routes (v1 API)
+    setupProjectRoutes(app);
 }
