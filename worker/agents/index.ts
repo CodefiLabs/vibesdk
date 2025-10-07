@@ -113,8 +113,14 @@ export async function getTemplateForQuery(
         // Now fetch all the files from the instance
         const templateDetailsResponse = await sandboxClient.getTemplateDetails(selectedTemplate.name);
         if (!templateDetailsResponse.success || !templateDetailsResponse.templateDetails) {
-            logger.error('Failed to fetch files', { templateDetailsResponse });
-            throw new Error('Failed to fetch files');
+            logger.error('Failed to fetch files', {
+                templateDetailsResponse,
+                success: templateDetailsResponse?.success,
+                error: templateDetailsResponse?.error,
+                templateName: selectedTemplate.name,
+                sandboxSessionId
+            });
+            throw new Error(`Failed to fetch files: ${templateDetailsResponse?.error || 'Unknown error'}`);
         }
             
         const templateDetails = templateDetailsResponse.templateDetails;
