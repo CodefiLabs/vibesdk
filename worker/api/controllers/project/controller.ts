@@ -223,12 +223,30 @@ export class ProjectController extends BaseController {
 
 			// Fetch user model configs
 			const modelConfigService = new ModelConfigService(env);
-			const allModelConfigs =
-				await modelConfigService.getUserModelConfigs(userId);
+			const userConfigsRecord = await modelConfigService.getUserModelConfigs(userId);
+
+			// Convert Record to Map and extract only ModelConfig properties
+			// NOTE: We pass an empty object if no user overrides exist - the inference
+			// system will fall back to using environment API keys
+			const userModelConfigs = new Map();
+			for (const [actionKey, mergedConfig] of Object.entries(userConfigsRecord)) {
+				// Only include user overrides, not defaults
+				// If empty, inference will use env API keys
+				if (mergedConfig.isUserOverride) {
+					const modelConfig = {
+						name: mergedConfig.name,
+						max_tokens: mergedConfig.max_tokens,
+						temperature: mergedConfig.temperature,
+						reasoning_effort: mergedConfig.reasoning_effort,
+						fallbackModel: mergedConfig.fallbackModel
+					};
+					userModelConfigs.set(actionKey, modelConfig);
+				}
+			}
 
 			// Build inference context
 			const inferenceContext: InferenceContext = {
-				userModelConfigs: allModelConfigs as any,
+				userModelConfigs: Object.fromEntries(userModelConfigs),
 				agentId: projectId,
 				userId: userId,
 				enableRealtimeCodeFix: true,
